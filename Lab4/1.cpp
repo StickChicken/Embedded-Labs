@@ -46,7 +46,7 @@ int main(){
 		movement(0,0);
 	}
 	/*Move along semicircle*/
-	for(int i = 0; i < 568; i++){
+	for(int i = 0; i < 545; i++){
 		movement(193, -500);
 	}
 	for(int i = 0; i < 50; i++){

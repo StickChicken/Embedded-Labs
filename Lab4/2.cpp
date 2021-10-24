@@ -1,4 +1,4 @@
-//Use g++ joystick.cc -std=c++11 -o Lab4EX2 Lab4EX2.cpp -lwiringPi
+//Use g++ joystick.cc -std=c++11 -o 2 2.cpp -lwiringPi
 
 #include <iostream>
 #include <wiringPi.h>
@@ -8,6 +8,7 @@
 #include <cstdlib>
 using namespace std;
 
+//bool checkButton(Joystick, JoystickEvent, unsigned int);
 void movement(int, int);
 int kobuki;
 
@@ -41,13 +42,24 @@ int main(){
 		//Right  - rotate the Kobuki 90 degrees clockwise
 		//Start  - immediately stop the Kobuki's movement
 		//Select - exit the script and close the Kobuki's connection cleanly
+		
 		if (joystick.sample(&event))
 		{
 			if (event.isButton())
 			{
 				printf("isButton: %u | Value: %d\n", event.number, event.value);
 				/*Interpret the joystick input and use that input to move the Kobuki*/
-
+				switch(event.number){
+					case 7:
+							movement(0,0);
+					break;
+					
+					case 8:
+						if(event.value) serialClose(kobuki);
+						else continue;	
+					break;
+				}
+				movement(0,0);
 
 			}
 			if (event.isAxis())
@@ -55,12 +67,43 @@ int main(){
 				printf("isAxis: %u | Value: %d\n", event.number, event.value);
 				/*Interpret the joystick input and use that input to move the Kobuki*/
 
-
+				switch(event.number){
+					case 7:
+						if(event.value == -32767){
+								movement(250, 0);
+							
+						}
+						
+						else if(event.value == 32767){
+								movement(-250, 0);								
+						}
+						
+						
+					break;
+					
+					case 6:
+						if(event.value > 0){
+							for(int i = 0; i < 75; i++){
+								movement(181, -1);
+								//if(checkButton(joystick, event, button)) break;
+							}
+						}
+						
+						else if(event.value < 0){
+							for(int i = 0; i < 75; i++){
+								movement(181, 1);
+								//if(checkButton(joystick, event, button)) break;
+							}
+						}
+					break;
+					}
+					
+				}
 				
 			}
 		}
 
-	}
+	
 
 	return 0;
 }
@@ -68,11 +111,11 @@ int main(){
 void movement(int sp, int r){
 
 	//Create the byte stream packet with the following format:
-	unsigned char b_0 = ; /*Byte 0: Kobuki Header 0*/
-	unsigned char b_1 = ; /*Byte 1: Kobuki Header 1*/
-	unsigned char b_2 = ; /*Byte 2: Length of Payload*/
-	unsigned char b_3 = ; /*Byte 3: Sub-Payload Header*/
-	unsigned char b_4 = ; /*Byte 4: Length of Sub-Payload*/
+	unsigned char b_0 = 0xAA; /*Byte 0: Kobuki Header 0*/
+	unsigned char b_1 = 0x55; /*Byte 1: Kobuki Header 1*/
+	unsigned char b_2 = 0x06; /*Byte 2: Length of Payload*/
+	unsigned char b_3 = 0x01; /*Byte 3: Sub-Payload Header*/
+	unsigned char b_4 = 0x04; /*Byte 4: Length of Sub-Payload*/
 
 	unsigned char b_5 = sp & 0xff;	//Byte 5: Payload Data: Speed(mm/s)
 	unsigned char b_6 = (sp >> 8) & 0xff; //Byte 6: Payload Data: Speed(mm/s)
@@ -86,9 +129,36 @@ void movement(int sp, int r){
 		checksum ^= packet[i];
 
 	/*Send the data (Byte 1 - Byte 9) to Kobuki using serialPutchar (kobuki, );*/
-
-
+	for(unsigned int i = 0; i <= 8; i++){
+		serialPutchar(kobuki, packet[i]);
+	}
+	serialPutchar(kobuki, checksum);
 	/*Pause the script so the data send rate is the
 	same as the Kobuki data receive rate*/
-
+	delay(20);
 }
+
+/*bool checkButton(Joystick, JoystickEvent, unsigned int button){
+if (joystick.sample(&event)){
+                        if (event.isButton())
+                        {
+                                printf("isButton: %u | Value: %d\n", event.number, event.value);
+                                Interpret the joystick input and use that input to move the Kobuki
+                                switch(event.number){
+                                        case 7:
+                                                if(event.value) return 1;
+                                        break;
+
+                                        case 8:
+                                                if(event.value) serialClose(kobuki);
+                                                return 1;
+                                        break;
+                                        
+                                }
+                                
+
+                        }
+		}
+		return 0;
+}
+*/
