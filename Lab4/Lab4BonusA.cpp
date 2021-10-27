@@ -19,9 +19,10 @@ void movement(int, int);
 void createSocket();
 void readData();
 
-int kobuki, new_socket;
+int kobuki, new_socket, valread;
 
 /*Create char buffer to store transmitted data*/
+char buffer[1024] = {0};
 
 int main(){
 	//Initialize filestream for the Kobuki
@@ -39,24 +40,32 @@ int main(){
 }
 
 void movement(int sp, int r){
-	//Create the byte stream packet with the following format:
-	/*Byte 0: Kobuki Header 0*/
-	/*Byte 1: Kobuki Header 1*/
-	/*Byte 2: Length of Payload*/
-	/*Byte 3: Payload Header*/
-	/*Byte 4: Payload Data: Length*/
-	/*Byte 5: Payload Data: Speed(mm/s)*/
-	/*Byte 6: Payload Data: Speed(mm/s)*/
-	/*Byte 7: Payload Data: Radius(mm)*/
-	/*Byte 8: Payload Data: Radius(mm)*/
-	/*Byte 9: Checksum*/
+//Create the byte stream packet with the following format:
+	unsigned char b_0 = 0xAA; /*Byte 0: Kobuki Header 0*/
+	unsigned char b_1 = 0x55; /*Byte 1: Kobuki Header 1*/
+	unsigned char b_2 = 0x06; /*Byte 2: Length of Payload*/
+	unsigned char b_3 = 0x01; /*Byte 3: Sub-Payload Header*/
+	unsigned char b_4 = 0x04; /*Byte 4: Length of Sub-Payload*/
 
-	/*Send the data to the Kobuki over a serial stream*/
+	unsigned char b_5 = sp & 0xff;	//Byte 5: Payload Data: Speed(mm/s)
+	unsigned char b_6 = (sp >> 8) & 0xff; //Byte 6: Payload Data: Speed(mm/s)
+	unsigned char b_7 = r & 0xff;	//Byte 7: Payload Data: Radius(mm)
+	unsigned char b_8 = (r >> 8) & 0xff;	//Byte 8: Payload Data: Radius(mm)
+	unsigned char checksum = 0;		//Byte 9: Checksum
+	
+	//Checksum all of the data
+	char packet[] = {b_0,b_1,b_2,b_3,b_4,b_5,b_6,b_7,b_8};
+	for (unsigned int i = 2; i < 9; i++)
+		checksum ^= packet[i];
 
-	/*Checksum all the data and send that as well*/
-
+	/*Send the data (Byte 1 - Byte 9) to Kobuki using serialPutchar (kobuki, );*/
+	for(unsigned int i = 0; i <= 8; i++){
+		serialPutchar(kobuki, packet[i]);
+	}
+	serialPutchar(kobuki, checksum);
 	/*Pause the script so the data send rate is the
-	same as the Kobuki receive rate*/
+	same as the Kobuki data receive rate*/
+	delay(20);
 }
 
 //Creates the connection between the client and
@@ -100,10 +109,10 @@ void createSocket(){
 void readData(){
 	/*Read the incoming data stream from the controller*/
 
-
+	valread = read(new_socket, buffer, 1024);
 	
 	/*Reset the buffer*/
-	memset(&/*buffer*/, '0', sizeof(/*buffer*/));
+	memset(&buffer, '0', sizeof(buffer*));
 
 	/*Print the data to the terminal*/
 
@@ -113,7 +122,7 @@ void readData(){
 	/*Use the received data to control the Kobuki*/
 
 	
-	if(/**/) {
+	if(1) {
 	/*Closes out of all connections cleanly*/
 
 	//When you need to close out of all connections, please
