@@ -15,9 +15,6 @@
 #define  PORT 8080
 using namespace std;
 
-#include <wiringPi.h>
-#include <wiringSerial.h>
-
 int createSocket();
 
 int sock = 0, valread;
@@ -101,17 +98,20 @@ int main(int argc, char const *argv[])
 		}
 				
 		/*Convert the event to a useable data type so it can be sent*/
-		connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
+		valread = read(sock, buffer, 1024);
 
 		/*Print the data stream to the terminal*/
-
+		printf("%s\n", buffer);
+		
 		/*Send the data to the server*/
-	
-
-		/*if() 
+		send(sock, joystick.sample(&event), strlen(joystick.sample(&event)), 0);
+		// should sock be valread? what is valread doing?
+		
+		
+		// I have no idea what this if clause should be.
+		if() 
 		{
 		//Closes out of all connections cleanly
-
 		//When you need to close out of the connection, please
 		//close TTP/IP data streams.
 		//Not doing so will result in the need to restart
@@ -120,7 +120,8 @@ int main(int argc, char const *argv[])
 			exit(0);
 
 		Set a delay
-		}*/
+		delay(50);
+		}
 
 	return 0;
 	}
