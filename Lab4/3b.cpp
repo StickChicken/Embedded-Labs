@@ -22,6 +22,8 @@ int sock = 0, valread;
 
 int main(int argc, char const *argv[])
 {
+
+    char *hello = "Hello from client"; 
 	char buffer[1024] = {0};
 
 	//Open the file stream for the joystick
@@ -50,7 +52,7 @@ int main(int argc, char const *argv[])
 				switch(event.number)
 				{
 					case 7:
-							movement(0,0);
+							//movement(0,0);
 					break;
 					
 					case 8:
@@ -58,7 +60,7 @@ int main(int argc, char const *argv[])
 						else continue;	
 					break;
 				}
-				movement(0,0);
+				//movement(0,0);
 
 			}
 			if (event.isAxis())
@@ -71,11 +73,11 @@ int main(int argc, char const *argv[])
 					case 7:
 						if(event.value < 0)
 						{
-							movement(250, 0);
+							//movement(250, 0);
 						}
 						else if(event.value > 0)
 						{
-							movement(-250, 0);
+							//movement(-250, 0);
 						}
 						
 					break;
@@ -83,12 +85,12 @@ int main(int argc, char const *argv[])
 					case 6:
 						if(event.value > 0)
 						{
-							movement(181, -1);
+							//movement(181, -1);
 						}
 						
 						else if(event.value > 0)
 						{
-							movement(181, 1);
+							//movement(181, 1);
 						}
 					break;
 				}
@@ -97,13 +99,14 @@ int main(int argc, char const *argv[])
 		}
 				
 		/*Convert the event to a useable data type so it can be sent*/
-		valread = read(sock, buffer, 1024);
+		//valread = read(sock, buffer, 1024);
 
 		/*Print the data stream to the terminal*/
-		printf("%s\n", buffer);
+		//printf("%s\n", buffer);
 		
 		/*Send the data to the server*/
-		send(sock, joystick.sample(&event), strlen(joystick.sample(&event)), 0);
+		send(sock , hello , strlen(hello) , 0 );
+		printf("Hello message sent\n");
 		// should sock be valread? what is valread doing? if /n is new line, is %s a pointer to the thing above it? In this case my valread?
 		
 		
@@ -118,7 +121,7 @@ int main(int argc, char const *argv[])
 			close(sock);
 			exit(0);
 
-		Set a delay
+		//Set a delay
 		delay(50);
 		}
 
