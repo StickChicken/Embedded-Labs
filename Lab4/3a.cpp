@@ -1,4 +1,4 @@
-//Use g++ -std=c++11 -o 3A Lab4EX3A.cpp -lwiringPi
+//Use g++ -std=c++11 -o 3a 3a.cpp -lwiringPi
 
 #include <iostream>
 #include <iomanip>
@@ -107,7 +107,7 @@ void createSocket(){
 
 void readData(){
 	/*Read the incoming data stream from the controller*/
-
+	static int n = 0;
 	valread = read(new_socket, buffer, 1024);
 	
 	
@@ -120,7 +120,7 @@ void readData(){
 	
 	
 	
-	if(1) {
+	if(n == 10) {
 	/*Closes out of all connections cleanly*/
 
 	//When you need to close out of all connections, please
@@ -138,5 +138,5 @@ void readData(){
 	/*Reset the buffer*/
 	memset(&buffer, '0', sizeof(buffer));
 
-
+	n++;
 }

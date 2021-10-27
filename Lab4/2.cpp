@@ -138,27 +138,3 @@ void movement(int sp, int r){
 	delay(20);
 }
 
-/*bool checkButton(Joystick, JoystickEvent, unsigned int button){
-if (joystick.sample(&event)){
-                        if (event.isButton())
-                        {
-                                printf("isButton: %u | Value: %d\n", event.number, event.value);
-                                Interpret the joystick input and use that input to move the Kobuki
-                                switch(event.number){
-                                        case 7:
-                                                if(event.value) return 1;
-                                        break;
-
-                                        case 8:
-                                                if(event.value) serialClose(kobuki);
-                                                return 1;
-                                        break;
-                                        
-                                }
-                                
-
-                        }
-		}
-		return 0;
-}
-*/

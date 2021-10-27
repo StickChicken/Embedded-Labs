@@ -50,7 +50,7 @@ int main(int argc, char const *argv[])
 				switch(event.number)
 				{
 					case 7:
-							movement(0,0);
+							//movement(0,0);
 					break;
 					
 					case 8:
@@ -58,7 +58,7 @@ int main(int argc, char const *argv[])
 						else continue;	
 					break;
 				}
-				movement(0,0);
+				//movement(0,0);
 
 			}
 			if (event.isAxis())
@@ -71,11 +71,11 @@ int main(int argc, char const *argv[])
 					case 7:
 						if(event.value < 0)
 						{
-							movement(250, 0);
+							//movement(250, 0);
 						}
 						else if(event.value > 0)
 						{
-							movement(-250, 0);
+							//movement(-250, 0);
 						}
 						
 					break;
@@ -83,12 +83,12 @@ int main(int argc, char const *argv[])
 					case 6:
 						if(event.value > 0)
 						{
-							movement(181, -1);
+							//movement(181, -1);
 						}
 						
 						else if(event.value > 0)
 						{
-							movement(181, 1);
+							//movement(181, 1);
 						}
 					break;
 				}
@@ -118,7 +118,7 @@ int main(int argc, char const *argv[])
 			close(sock);
 			exit(0);
 
-		Set a delay
+		//Set a delay
 		delay(50);
 		}
 
