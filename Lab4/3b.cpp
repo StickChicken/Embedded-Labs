@@ -1,4 +1,4 @@
-//Use g++ joystick.cc -std=c++11 -o Lab4EX3B Lab4EX3B.cpp
+//Use g++ joystick.cc -std=c++11 -o 3b 3b.cpp
 
 #include <stdio.h>
 #include <iostream>
@@ -22,6 +22,8 @@ int sock = 0, valread;
 
 int main(int argc, char const *argv[])
 {
+
+    char *hello = "Hello from client"; 
 	char buffer[1024] = {0};
 
 	//Open the file stream for the joystick
@@ -97,13 +99,14 @@ int main(int argc, char const *argv[])
 		}
 				
 		/*Convert the event to a useable data type so it can be sent*/
-		valread = read(sock, buffer, 1024);
+		//valread = read(sock, buffer, 1024);
 
 		/*Print the data stream to the terminal*/
-		printf("%s\n", buffer);
+		//printf("%s\n", buffer);
 		
 		/*Send the data to the server*/
-		send(sock, joystick.sample(&event), strlen(joystick.sample(&event)), 0);
+		send(sock , hello , strlen(hello) , 0 );
+		printf("Hello message sent\n");
 		// should sock be valread? what is valread doing? if /n is new line, is %s a pointer to the thing above it? In this case my valread?
 		
 		
