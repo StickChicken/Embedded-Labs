@@ -109,9 +109,10 @@ int main(int argc, char const *argv[])
 		
 		
 		// I have no idea what this if clause should be.
-		if() 
+		if(1) 
 		{
-		//Closes out of all connections cleanly
+		/*Closes out of all connections cleanly*/
+		
 		//When you need to close out of the connection, please
 		//close TTP/IP data streams.
 		//Not doing so will result in the need to restart
