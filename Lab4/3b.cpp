@@ -1,5 +1,6 @@
 //Use g++ joystick.cc -std=c++11 -o 3b 3b.cpp
 
+#include <wiringPi.h>
 #include <stdio.h>
 #include <iostream>
 #include <sys/socket.h>
@@ -23,7 +24,7 @@ int sock = 0, valread;
 int main(int argc, char const *argv[])
 {
 
-    char *hello = "Hello from client"; 
+    //char *hello = "Hello from client"; 
 	char buffer[1024] = {0};
 
 	//Open the file stream for the joystick
@@ -45,14 +46,17 @@ int main(int argc, char const *argv[])
 		/*Sample the events from the joystick*/
 		if (joystick.sample(&event))
 		{
+			buffer[] = 'S';
 			if (event.isButton())
 			{
 				printf("isButton: %u | Value: %d\n", event.number, event.value);
+				
 				/*Interpret the joystick input and use that input to move the Kobuki*/
 				switch(event.number)
 				{
 					case 7:
 							//movement(0,0);
+							
 					break;
 					
 					case 8:
@@ -65,15 +69,17 @@ int main(int argc, char const *argv[])
 			}
 			if (event.isAxis())
 			{
+				buffer[] = 'S';
 				printf("isAxis: %u | Value: %d\n", event.number, event.value);
 				/*Interpret the joystick input and use that input to move the Kobuki*/
-
+				
 				switch(event.number)
 				{
 					case 7:
 						if(event.value < 0)
 						{
 							//movement(250, 0);
+							
 						}
 						else if(event.value > 0)
 						{
@@ -105,8 +111,8 @@ int main(int argc, char const *argv[])
 		//printf("%s\n", buffer);
 		
 		/*Send the data to the server*/
-		send(sock , hello , strlen(hello) , 0 );
-		printf("Hello message sent\n");
+			send(sock , buffer , strlen(buffer) , 0 );
+		//printf("Hello message sent\n");
 		// should sock be valread? what is valread doing? if /n is new line, is %s a pointer to the thing above it? In this case my valread?
 		
 		

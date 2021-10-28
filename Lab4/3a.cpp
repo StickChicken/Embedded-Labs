@@ -22,6 +22,7 @@ int kobuki, new_socket, valread;
 
 /*Create char buffer to store transmitted data*/
 char buffer[1024] = {0};
+char dataBuff[4] = {0};
 
 int main(){
 	//Initialize filestream for the Kobuki
@@ -110,30 +111,25 @@ void readData(){
 	static int n = 0;
 	valread = read(new_socket, buffer, 1024);
 	
+	for(int i = 0; i < 4; i++){
+		dataBuff[i] = buffer[i];
+	}
+	
+	if(buffer[0] == '1' && buffer[1] =='1' && buffer[2] =='1' && buffer[3] =='1'){
+		cout << "Le Kill" << endl;
+		close(new_socket);
+		serialClose(kobuki);
+		exit(0);
+	}
 	
 	/*Print the data to the terminal*/
 
-	printf("Incoming Data: %s\n", buffer);
+	printf("Incoming Data: %s\n", dataBuff);
 	
 
 	/*Use the received data to control the Kobuki*/
 	
 	
-	
-	if(n == 10) {
-	/*Closes out of all connections cleanly*/
-
-	//When you need to close out of all connections, please
-	//close both the Kobuki and TTP/IP data streams.
-	//Not doing so will result in the need to restart
-	//the raspberry pi and Kobuki
-		close(new_socket);
-		serialClose(kobuki);
-		exit(0);
-	}
-
-
-
 
 	/*Reset the buffer*/
 	memset(&buffer, '0', sizeof(buffer));
