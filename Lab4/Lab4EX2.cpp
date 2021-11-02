@@ -68,11 +68,11 @@ int main(){
 void movement(int sp, int r){
 
 	//Create the byte stream packet with the following format:
-	unsigned char b_0 = ; /*Byte 0: Kobuki Header 0*/
-	unsigned char b_1 = ; /*Byte 1: Kobuki Header 1*/
-	unsigned char b_2 = ; /*Byte 2: Length of Payload*/
-	unsigned char b_3 = ; /*Byte 3: Sub-Payload Header*/
-	unsigned char b_4 = ; /*Byte 4: Length of Sub-Payload*/
+	unsigned char b_0 =0 ; /*Byte 0: Kobuki Header 0*/
+	unsigned char b_1 =0 ; /*Byte 1: Kobuki Header 1*/
+	unsigned char b_2 =0 ; /*Byte 2: Length of Payload*/
+	unsigned char b_3 =0 ; /*Byte 3: Sub-Payload Header*/
+	unsigned char b_4 =0 ; /*Byte 4: Length of Sub-Payload*/
 
 	unsigned char b_5 = sp & 0xff;	//Byte 5: Payload Data: Speed(mm/s)
 	unsigned char b_6 = (sp >> 8) & 0xff; //Byte 6: Payload Data: Speed(mm/s)

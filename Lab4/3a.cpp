@@ -121,10 +121,10 @@ void readData(){
 		serialClose(kobuki);
 		exit(0);
 	}
-	
+
 	/*Print the data to the terminal*/
 
-	printf("Incoming Data: %s\n", dataBuff);
+	printf("Incoming Data: %s\n", buffer);
 	
 
 	/*Use the received data to control the Kobuki*/
