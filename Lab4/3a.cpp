@@ -111,28 +111,45 @@ void readData(){
 	static int n = 0;
 	valread = read(new_socket, buffer, 1024);
 	
-	for(int i = 0; i < 4; i++){
-		dataBuff[i] = buffer[i];
-	}
 	
 	if(buffer[0] == '1' && buffer[1] =='1' && buffer[2] =='1' && buffer[3] =='1'){
 		cout << "Le Kill" << endl;
+        movement(0,0);
 		close(new_socket);
 		serialClose(kobuki);
 		exit(0);
 	}
+
+	else if(buffer[0] == '0' && buffer[2] =='6' && buffer[3] =='0'){
+        for(int i = 0; i < 75; i++){
+                movement(181,1);
+        }
+    }
+
+    else if(buffer[0] == '0' && buffer[2] =='6' && buffer[3] =='1'){
+        for(int i = 0; i < 75; i++){
+                movement(181,-1);
+        }
+    }
+
+    else if(buffer[0] == '0' && buffer[2] =='7' && buffer[3] =='0'){
+                movement(250,0);
+    }
+
+    else if(buffer[0] == '0' && buffer[2] =='7' && buffer[3] =='0'){
+                movement(-250,0);
+    }
+
+    else if(buffer[0] == '1' && buffer[2] =='7' && buffer[3] =='1'){
+                movement(0,0);
+    }
 
 	/*Print the data to the terminal*/
 
 	printf("Incoming Data: %s\n", buffer);
 	
 
-	/*Use the received data to control the Kobuki*/
-	
-	
-
 	/*Reset the buffer*/
 	memset(&buffer, '0', sizeof(buffer));
 
-	n++;
 }
