@@ -13,56 +13,57 @@
 #include <string>
 #include "joystick.hh"
 #include <cstdlib>
+#include <iostream>
+#include <string>
+#include <cstring>
 #define  PORT 8080
 using namespace std;
 
 int createSocket();
 
-int sock = 0, valread;
+int sock = 0;
 
+int main(int argc, char const *argv[]){
+    char buffer[1024] = {0};
+    bool quit = 0;
 
-int main(int argc, char const *argv[])
-{
-
-    //char *hello = "Hello from client"; 
-	char buffer[1024] = {0};
-    static int n = 0;
 	//Open the file stream for the joystick
 	Joystick joystick("/dev/input/js0");
 	JoystickEvent event;
-
 	if(!joystick.isFound()){
 		cout << "Error opening joystick" << endl;
 		exit(1);
 	}
 
-
 	//Create the connection to the server
 	createSocket();
-/*
-	while(true)
-	{
 
-		//Sample the events from the joystick
-		if (joystick.sample(&event))
+	while(true){
+
+		/*Sample the events from the joystick*/
+        if (joystick.sample(&event))
 		{
-
 			if (event.isButton())
 			{
 				printf("isButton: %u | Value: %d\n", event.number, event.value);
-
-				//Interpret the joystick input and use that input to move the Kobuki
-				switch(event.number)
-				{
+				/*Interpret the joystick input and use that input to move the Kobuki*/
+				switch(event.number){
 					case 7:
-
-
+							//movement(0,0);
+							// start button
+							//s = "1071";
+							buffer[0] = '1';
+							buffer[1] = '0';
+							buffer[2] = '7';
+							buffer[3] = '1';
 					break;
 
 					case 8:
 						if(event.value){
-
-                    }
+                        //s = "1111";
+                        // Logitech (select) button
+                        quit = 1;
+                        }
 						else continue;
 					break;
 				}
@@ -72,64 +73,87 @@ int main(int argc, char const *argv[])
 			if (event.isAxis())
 			{
 				printf("isAxis: %u | Value: %d\n", event.number, event.value);
-				//Interpret the joystick input and use that input to move the Kobuki
+				/*Interpret the joystick input and use that input to move the Kobuki*/
 
-				switch(event.number)
-				{
+				switch(event.number){
 					case 7:
-						if(event.value < 0)
-						{
+						if(event.value == -32767){
+								//movement(250, 0);
+								// D-Pad Up
+								//s = "0070";
+								buffer[0] = '0';
+								buffer[1] = '0';
+								buffer[2] = '7';
+								buffer[3] = '0';
 
 						}
-						else if(event.value > 0)
-						{
 
+						else if(event.value == 32767){
+								//movement(-250, 0);
+								// D-Pad Down
+								//s = "0071";
+								buffer[0] = '0';
+								buffer[1] = '0';
+								buffer[2] = '7';
+								buffer[3] = '1';
 						}
+
 
 					break;
 
 					case 6:
-						if(event.value > 0)
-						{
-
+						if(event.value > 0){
+							for(int i = 0; i < 75; i++){
+								//movement(181, -1);
+								// D-Pad Left
+								//s = "0060";
+								buffer[0] = '0';
+								buffer[1] = '0';
+								buffer[2] = '6';
+								buffer[3] = '0';
+								
+								
+								//if(checkButton(joystick, event, button)) break;
+							}
 						}
 
-						else if(event.value > 0)
-						{
-
+						else if(event.value < 0){
+							for(int i = 0; i < 75; i++){
+								//movement(181, 1);
+								// D-Pad Right
+								//s = "0061";
+								buffer[0] = '0';
+								buffer[1] = '0';
+								buffer[2] = '6';
+								buffer[3] = '1';
+								
+								
+								//if(checkButton(joystick, event, button)) break;
+							}
 						}
 					break;
+					}
+					send(sock, buffer, 1024, 0);
 				}
-
 			}
-		}
-*/
-		//Convert the event to a useable data type so it can be sent
-		valread = read(sock, buffer, 1024);
 
+		/*Convert the event to a useable data type so it can be sent*/
 		/*Print the data stream to the terminal*/
-		printf("%s\n", buffer);
-		
-		/*Send the data to the server*/
-			send(sock , buffer , strlen(buffer) , 0 );
-		//printf("Hello message sent\n");
 
-		if(n > 50)
+		/*Send the data to the server*/
+        //strcpy(buffer, s.c_str());
+         //1024
+        if(quit)
 		{
-		//Closes out of all connections cleanly
-		//When you need to close out of the connection, please
-		//close TTP/IP data streams.
-		//Not doing so will result in the need to restart
-		//the raspberry pi and Kobuki
 			close(sock);
 			exit(0);
 
 		//Set a delay
 		delay(50);
 		}
-        n++;
-	return 0;
-	}
+
+    }
+    return 0;
 }
 
 //Creates the connection between the client and
@@ -137,7 +161,7 @@ int main(int argc, char const *argv[])
 int createSocket(){
 	struct sockaddr_in address;
 	struct sockaddr_in serv_addr;
-	
+
 
 	if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0){
 		printf("\nSocket creation error \n");
@@ -150,7 +174,7 @@ int createSocket(){
 	serv_addr.sin_port   = htons(PORT);
 
 	/*Use the IP address of the server you are connecting to*/
-	if(inet_pton(AF_INET, "192.168.1.56" , &serv_addr.sin_addr) <= 0){
+	if(inet_pton(AF_INET, "10.227.118.80" , &serv_addr.sin_addr) <= 0){
 		printf("\nInvalid address/ Address not supported \n");
 		return -1;
 	}
@@ -159,6 +183,5 @@ int createSocket(){
 		printf("\nConnection Failed \n");
 		return -1;
 	}
-
 	return 0;
 }

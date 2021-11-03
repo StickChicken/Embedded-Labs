@@ -25,8 +25,7 @@ int sock = 0;
 
 int main(int argc, char const *argv[]){
     char buffer[1024] = {0};
-    string s = "empty";
-    int n = 0;
+    bool quit = 0;
 
 	//Open the file stream for the joystick
 	Joystick joystick("/dev/input/js0");
@@ -51,11 +50,19 @@ int main(int argc, char const *argv[]){
 				switch(event.number){
 					case 7:
 							//movement(0,0);
+							// start button
+							//s = "1071";
+							buffer[0] = '1';
+							buffer[1] = '0';
+							buffer[2] = '7';
+							buffer[3] = '1';
 					break;
 
 					case 8:
 						if(event.value){
-                        s = "1111";
+                        //s = "1111";
+                        // Logitech (select) button
+                        quit = 1;
                         }
 						else continue;
 					break;
@@ -72,11 +79,23 @@ int main(int argc, char const *argv[]){
 					case 7:
 						if(event.value == -32767){
 								//movement(250, 0);
+								// D-Pad Up
+								//s = "0070";
+								buffer[0] = '0';
+								buffer[1] = '0';
+								buffer[2] = '7';
+								buffer[3] = '0';
 
 						}
 
 						else if(event.value == 32767){
 								//movement(-250, 0);
+								// D-Pad Down
+								//s = "0071";
+								buffer[0] = '0';
+								buffer[1] = '0';
+								buffer[2] = '7';
+								buffer[3] = '1';
 						}
 
 
@@ -86,6 +105,14 @@ int main(int argc, char const *argv[]){
 						if(event.value > 0){
 							for(int i = 0; i < 75; i++){
 								//movement(181, -1);
+								// D-Pad Left
+								//s = "0060";
+								buffer[0] = '0';
+								buffer[1] = '0';
+								buffer[2] = '6';
+								buffer[3] = '0';
+								
+								
 								//if(checkButton(joystick, event, button)) break;
 							}
 						}
@@ -93,11 +120,20 @@ int main(int argc, char const *argv[]){
 						else if(event.value < 0){
 							for(int i = 0; i < 75; i++){
 								//movement(181, 1);
+								// D-Pad Right
+								//s = "0061";
+								buffer[0] = '0';
+								buffer[1] = '0';
+								buffer[2] = '6';
+								buffer[3] = '1';
+								
+								
 								//if(checkButton(joystick, event, button)) break;
 							}
 						}
 					break;
 					}
+					send(sock, buffer, 1024, 0);
 				}
 			}
 
@@ -105,9 +141,9 @@ int main(int argc, char const *argv[]){
 		/*Print the data stream to the terminal*/
 
 		/*Send the data to the server*/
-        strcpy(buffer, s.c_str());
-        send(sock, buffer, 1024, 0);
-        if(s == "1111")
+        //strcpy(buffer, s.c_str());
+         //1024
+        if(quit)
 		{
 			close(sock);
 			exit(0);
@@ -138,7 +174,7 @@ int createSocket(){
 	serv_addr.sin_port   = htons(PORT);
 
 	/*Use the IP address of the server you are connecting to*/
-	if(inet_pton(AF_INET, "192.168.1.56" , &serv_addr.sin_addr) <= 0){
+	if(inet_pton(AF_INET, "10.227.118.80" , &serv_addr.sin_addr) <= 0){
 		printf("\nInvalid address/ Address not supported \n");
 		return -1;
 	}
