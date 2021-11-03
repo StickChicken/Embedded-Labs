@@ -1,4 +1,4 @@
-//Use g++ joystick.cc -std=c++11 -o 3b_new 3b_new.cpp
+//Use g++ joystick.cc -std=c++11 -o 3b 3b.cpp
 
 #include <wiringPi.h>
 #include <stdio.h>
@@ -60,9 +60,8 @@ int main(int argc, char const *argv[]){
 
 					case 8:
 						if(event.value){
-                        //s = "1111";
-                        // Logitech (select) button
-                        quit = 1;
+                            buffer[0] = 'C';
+                             quit = 1;
                         }
 						else continue;
 					break;
@@ -102,8 +101,7 @@ int main(int argc, char const *argv[]){
 					break;
 
 					case 6:
-						if(event.value > 0){
-							for(int i = 0; i < 75; i++){
+						if(event.value == 32767){
 								//movement(181, -1);
 								// D-Pad Left
 								//s = "0060";
@@ -111,14 +109,9 @@ int main(int argc, char const *argv[]){
 								buffer[1] = '0';
 								buffer[2] = '6';
 								buffer[3] = '0';
-								
-								
-								//if(checkButton(joystick, event, button)) break;
-							}
 						}
 
-						else if(event.value < 0){
-							for(int i = 0; i < 75; i++){
+						else if(event.value == -32767){
 								//movement(181, 1);
 								// D-Pad Right
 								//s = "0061";
@@ -126,15 +119,16 @@ int main(int argc, char const *argv[]){
 								buffer[1] = '0';
 								buffer[2] = '6';
 								buffer[3] = '1';
-								
-								
-								//if(checkButton(joystick, event, button)) break;
-							}
 						}
+						else {
+                            buffer[2] = '0';
+                            buffer[3] = '0';
+                        }
 					break;
 					}
-					send(sock, buffer, 1024, 0);
+
 				}
+				send(sock, buffer, 1024, 0);
 			}
 
 		/*Convert the event to a useable data type so it can be sent*/
@@ -174,7 +168,7 @@ int createSocket(){
 	serv_addr.sin_port   = htons(PORT);
 
 	/*Use the IP address of the server you are connecting to*/
-	if(inet_pton(AF_INET, "10.227.118.80" , &serv_addr.sin_addr) <= 0){
+	if(inet_pton(AF_INET, "10.227.57.22" , &serv_addr.sin_addr) <= 0){
 		printf("\nInvalid address/ Address not supported \n");
 		return -1;
 	}

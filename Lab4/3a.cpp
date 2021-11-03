@@ -132,7 +132,7 @@ void readData(){
         }
     }
 
-    else if(buffer[0] == '0' && buffer[2] =='7' && buffer[3] =='0'){
+    else if(buffer[0] == '0' && buffer[2] =='7' && buffer[3] =='1'){
                 movement(250,0);
     }
 
