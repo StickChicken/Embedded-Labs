@@ -112,24 +112,25 @@ void readData(){
 	valread = read(new_socket, buffer, 1024);
 	
 	
-	if(buffer[0] == '1' && buffer[1] =='1' && buffer[2] =='1' && buffer[3] =='1'){
-		cout << "Le Kill" << endl;
-        movement(0,0);
+	if(buffer[0] =='C'){
+         	movement(0,0);
 		close(new_socket);
 		serialClose(kobuki);
 		exit(0);
 	}
 
 	else if(buffer[0] == '0' && buffer[2] =='6' && buffer[3] =='0'){
-        for(int i = 0; i < 75; i++){
-                movement(181,1);
+        for(int i = 0; i < 36; i++){
+                movement(181,-1);
         }
+	movement(0,0);
     }
 
     else if(buffer[0] == '0' && buffer[2] =='6' && buffer[3] =='1'){
-        for(int i = 0; i < 75; i++){
-                movement(181,-1);
+        for(int i = 0; i < 36; i++){
+                movement(181,1);
         }
+	movement(0,0);
     }
 
     else if(buffer[0] == '0' && buffer[2] =='7' && buffer[3] =='1'){
